@@ -3,11 +3,16 @@
         <ActionBar :title="app.title" />
         <StackLayout>
 
+
+            <Label textWrap="true" style="margin-bottom: 30; font-weight: 700; color: red;">THIS APP IS UNRELEASED AND IS IN ITS VERY VERY BETA STAGE, MEANING THAT AT THIS POINT OF TIME, BUGS ARE CONSIDERED NORMAL</Label>
+
+            
             <!-- UI CHANGES, ADDED APP TITLE AND ALSO THE DESCRIPTION -->
             <Label textWrap="true" style=" font-size: 30; font-weight: 700;">{{app.title}}</Label>
             <Label textWrap="true"> {{app.description}} </Label>
             <Label textWrap="true" style="margin-bottom: 30;"> App Current Status: {{app.status}} </Label>
 
+            <!-- CHANGE SUBREDDIT INPUTFIELD -->
             <TextField v-model="subreddit" />
             
             <!-- REFRESH BUTTON -->
@@ -59,6 +64,7 @@ var utilsModule = require("tns-core-modules/utils/utils");
             onPostTap(args){
                 console.log(args.index)
 
+                
                 // GETTING PERMA LINK (IT RETURNS AS /R/SUBREDDIT SO WE NEED TO CONCAT IT TO THE REDDITLINK)
                 var permalink = this.redditdata.data.children[args.index].data.permalink
                 var redditlink = "https://reddit.com"
@@ -76,8 +82,8 @@ var utilsModule = require("tns-core-modules/utils/utils");
             },
 
             getApiData() {
-
-                fetch("https://www.reddit.com/r/" + this.subreddit + "/new.json")
+                
+                fetch("https://www.reddit.com/r/" + this.subreddit + "/new.json?limit=100")
                     .then(res => res.json())
                     .then(json => {
                         console.log(json)
