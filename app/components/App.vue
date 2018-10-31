@@ -3,8 +3,10 @@
         <ActionBar :title="app.title" />
         <StackLayout>
 
+            <Label textWrap="true" style="margin-bottom: 30;"> App Current Status: {{app.status}} </Label>
+
             <!-- REFRESH BUTTON -->
-            <Button @tap="getApiData()"> Refresh </Button>
+            <Button @tap="refresh()"> Refresh </Button>
             
             <!-- LISTVIEW / LOOP -->
             <ListView class="list-group" for="post in redditdata.data.children" style="height:1250px" v-if="loaded">
@@ -29,7 +31,8 @@
             return {
 
                 app: {
-                    title: "Rereddit"
+                    title: "Rereddit",
+                    status: "launched",
                 },
 
                 redditdata: [],
@@ -41,6 +44,12 @@
         },
 
         methods: {
+
+            refresh(){
+                this.app.status = "Refreshing",
+                this.loaded = false
+                this.getApiData()
+            },
 
             getApiData() {
 
@@ -55,7 +64,7 @@
                         // ALL THE POST DATA START FROM json.data.children[x].data where x is the post number
 
                         this.loaded = true;
-                        
+                        this.app.status = "Fetched API"
                     })
 
             }
@@ -86,6 +95,11 @@
 
     .list-group-item-heading{
         color: #fff;
+    }
+
+    Button{
+        background-color: #53b3ba;
+        border-radius: 100;
     }
 
     
