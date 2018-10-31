@@ -3,6 +3,9 @@
         <ActionBar :title="app.title" />
         <StackLayout>
 
+            <!-- UI CHANGES, ADDED APP TITLE AND ALSO THE DESCRIPTION -->
+            <Label textWrap="true" style=" font-size: 30; font-weight: 700;">{{app.title}}</Label>
+            <Label textWrap="true"> {{app.description}} </Label>
             <Label textWrap="true" style="margin-bottom: 30;"> App Current Status: {{app.status}} </Label>
 
             <TextField v-model="subreddit" />
@@ -16,7 +19,7 @@
                     <FlexboxLayout flexDirection="row" class="list-group-item">
                         <Label :text="post.data.title" class="list-group-item-heading" />
 
-                        <Img :src="post.data.thumbnail" style="width: 100px;" />
+                        <Img :src="post.data.thumbnail" style="width: 200px;" />
                         
                     </FlexboxLayout>
                 </v-template>
@@ -37,6 +40,7 @@ var utilsModule = require("tns-core-modules/utils/utils");
 
                 app: {
                     title: "Rereddit",
+                    description: "A Reddit Client for Android (BETA)",
                     status: "launched",
                 },
 
@@ -99,6 +103,9 @@ var utilsModule = require("tns-core-modules/utils/utils");
 </script>
 
 <style scoped>
+
+    /* PRIMARY COLOR IS #53b3ba */
+
     Page {
         background-color: #161616;
         color: #ffffff;
@@ -122,5 +129,8 @@ var utilsModule = require("tns-core-modules/utils/utils");
         border-radius: 100;
     }
 
+    Img{
+        border-radius: 100;
+    }
     
 </style>

@@ -1,0 +1,6 @@
+LAST UPDATED
+01-11-2018 07:38
+
+[ ] - Add pull to refresh
+[ ] - Add toast for refreshing
+[ ] - Add search for subreddit (Using APIs)
