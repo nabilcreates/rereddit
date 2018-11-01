@@ -61,7 +61,7 @@
 
                 app: {
                     title: "Rereddit",
-                    version: "1.3.0b",
+                    version: "1.3.1b",
                     revision: "1",
                     description: "A Reddit Client for Android (BETA)",
                     status: "App Launched",
