@@ -61,7 +61,7 @@
 
                 app: {
                     title: "Rereddit",
-                    version: "1.3.0u",
+                    version: "1.3.0b",
                     description: "A Reddit Client for Android (BETA)",
                     status: "App Launched",
                     mode: "?",
@@ -236,4 +236,5 @@
         color: #e45e35;
         font-weight: 700;
     }
+
 </style>
