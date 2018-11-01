@@ -3,15 +3,12 @@
         <ActionBar :title="app.title" />
         <StackLayout>
 
-
-            <Label textWrap="true" style="margin-bottom: 30; font-weight: 700; color: red;">THIS APP IS UNRELEASED AND
-                IS IN ITS VERY VERY BETA STAGE, MEANING THAT AT THIS POINT OF TIME, BUGS ARE CONSIDERED NORMAL</Label>
-
+            <!-- MAIN CONCEPT OF THE API FETCHING IS THAT THE SUBREDDIT WILL BE VERIFIED BY VERIFYSUBREDDIT AND IF IT PASS, IT WILL RUN THROUGH FETCHAPI WHICH WILL GET THE POSTS -->
 
             <!-- UI CHANGES, ADDED APP TITLE AND ALSO THE DESCRIPTION -->
-            <Label textWrap="true" style=" font-size: 30; font-weight: 700;">{{app.title}}</Label>
-            <Label textWrap="true"> {{app.description}} </Label>
-            <Label textWrap="true" style="margin-bottom: 30;"> App Current Status: {{app.status}} </Label>
+            <!-- <Label textWrap="true" style=" font-size: 30; font-weight: 700;">{{app.title}}</Label>
+            <Label textWrap="true"> {{app.description}} </Label> -->
+            <Label textWrap="true" style="margin-bottom: 10;"> App Current Status: {{app.status}} </Label>
 
             <!-- CHANGE SUBREDDIT INPUTFIELD -->
             <TextField v-model="subreddit" />
@@ -19,16 +16,29 @@
             <!-- REFRESH BUTTON -->
             <Button @tap="refresh()"> Refresh / Update </Button>
 
-            <!-- LISTVIEW / LOOP -->
-            <ListView class="list-group" for="post in redditdata.data.children" @itemTap="onPostTap" style="height:1250px"
-                v-if="loaded">
+            <!-- SEARCH BUTTON -->
+            <Button @tap="searchSubreddit()">Seach For Subreddit </Button>
+
+            <!-- LISTVIEW / LOOP FOR SEARCH-->
+            <!-- MAIN CONCEPT IS THAT IT WILL SEARCH AND THEN THE LISTVIEW WILL SHOW IF IT MEETS BOTH REQUIREMENT THAT IS LOADEDSEARC AND APP.MODE IS SEARCH. -->
+            <ListView class="list-group" for="result in searchdata.data.children" @itemTap="onSearchTap"
+                v-if="loadedsearch && app.mode == 'search'" separatorColor="gray">
                 <v-template>
-                    <FlexboxLayout flexDirection="row" class="list-group-item">
-                        <Label :text="post.data.title" class="list-group-item-heading" />
+                    <StackLayout flexDirection="row" class="list-group-item">
+                        <Label textWrap='true' :text="result.data.display_name_prefixed" class="list-group-item-heading" />
+                        <Label textWrap='true' :text="result.data.public_description" class="list-group-item-heading" />
+                    </StackLayout>
+                </v-template>
+            </ListView>
 
+            <!-- LISTVIEW / LOOP FOR SUBREDDITS-->
+            <ListView class="list-group" for="post in redditdata.data.children" @itemTap="onPostTap"
+                v-if="loaded && app.mode == 'subreddit'" separatorColor="gray">
+                <v-template>
+                    <StackLayout flexDirection="row" class="list-group-item">
                         <Img :src="post.data.thumbnail" style="width: 200px;" />
-
-                    </FlexboxLayout>
+                        <Label textWrap='true' :text="post.data.title" class="list-group-item-heading" />
+                    </StackLayout>
                 </v-template>
             </ListView>
 
@@ -48,19 +58,29 @@
                     title: "Rereddit",
                     description: "A Reddit Client for Android (BETA)",
                     status: "launched",
+                    mode: "?",
                 },
 
                 subreddit: "wallpapers",
 
                 redditdata: [],
+                searchdata: [],
 
                 loaded: false,
+                loadedsearch: false,
+
 
             }
 
         },
 
         methods: {
+
+            onSearchTap(args) {
+                var subredditname = this.searchdata.data.children[args.index].data.display_name;
+                console.log(subredditname);
+                this.verifySubreddit(subredditname.toLowerCase())
+            },
 
             onPostTap(args) {
                 console.log(args.index)
@@ -79,14 +99,42 @@
             refresh() {
                 this.app.status = "Refreshing",
                     this.loaded = false
-                this.verifySubreddit()
+                this.verifySubreddit(this.subreddit)
             },
 
-            verifySubreddit() {
+            searchSubreddit() {
+
+                this.app.mode = "search";
+
+                this.loadedsearch = false;
+                this.app.status = "Searching for Subreddit"
 
                 fetch("https://www.reddit.com/subreddits/search.json?q=" + this.subreddit)
                     .then(res => res.json())
                     .then(json => {
+
+                        // json.data.children[i].data.display_name_prefixed
+                        console.log(json)
+                        this.searchdata = json
+
+                        this.app.status = "Searched Subreddit"
+                        this.loadedsearch = true;
+                        this.loaded = false;
+                    })
+
+
+            },
+
+            verifySubreddit(subreddit) {
+
+                this.app.status = "Verifying Subreddit"
+
+                fetch("https://www.reddit.com/subreddits/search.json?q=" + subreddit)
+                    .then(res => res.json())
+                    .then(json => {
+
+                        this.app.mode = "subreddit";
+                        this.loadedsearch = false;
 
                         console.log(json)
 
@@ -98,38 +146,30 @@
 
                         } else {
 
+                            this.app.status = "Subreddit is valid. Fetching API..."
+
                             // IF IT EXISTS
-                            this.fetchApiData()
+                            fetch("https://www.reddit.com/r/" + subreddit + "/new.json?limit=100")
+                                .then(res => res.json())
+                                .then(json => {
+
+                                    console.log(json)
+
+                                    // ALL THE MAIN DATA STARTS AT json.data.children
+                                    this.redditdata = json
+
+                                    // ALL THE POST DATA START FROM json.data.children[x].data where x is the post number
+
+                                    this.loaded = true;
+                                    this.app.status = "Fetched API"
+                                })
 
                         }
 
                     })
             },
 
-            fetchApiData() {
-
-                fetch("https://www.reddit.com/r/" + this.subreddit + "/new.json?limit=100")
-                    .then(res => res.json())
-                    .then(json => {
-                        console.log(json)
-
-                        // ALL THE MAIN DATA STARTS AT json.data.children
-                        this.redditdata = json
-
-                        // ALL THE POST DATA START FROM json.data.children[x].data where x is the post number
-
-                        this.loaded = true;
-                        this.app.status = "Fetched API"
-                    })
-
-
-            }
-
         },
-
-        mounted() {
-            this.verifySubreddit()
-        }
 
     }
 </script>
@@ -158,6 +198,7 @@
     Button {
         background-color: #53b3ba;
         border-radius: 100;
+        margin: 10 0;
     }
 
     Img {

@@ -1,7 +1,7 @@
 LAST UPDATED
-01-11-2018 13:29
+01-11-2018 14:23
 
 [ ] - Add pull to refresh
 [ ] - Add toast for refreshing
-[ ] - Add search for subreddit (Using APIs)
+[X] - Add search for subreddit (Using APIs)
 [X] - Add verification for non existing subreddit
