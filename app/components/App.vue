@@ -202,7 +202,7 @@
 
         mounted() {
 
-            this.randomSubreddit()
+            this.subreddit = "Enter a subreddit here!"
 
         }
 
