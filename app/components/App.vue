@@ -31,7 +31,7 @@
                         <Label textWrap='true' :text="result.data.display_name_prefixed" class="list-group-item-heading maincolor" />
                         <Label textWrap='true' v-if="result.data.public_description" :text="result.data.public_description"
                             class="list-group-item-heading" />
-                        <Label textWrap='true' v-else text="No Description Provided" class="list-group-item-heading" />
+                        <Label textWrap='true' v-else text="???" class="list-group-item-heading" />
                     </StackLayout>
                 </v-template>
             </ListView>
@@ -116,6 +116,10 @@
                 this.loadedsearch = false;
                 this.app.status = "Searching for Subreddit"
 
+                if(this.subreddit == "rdrs"){
+                    this.randomSubreddit()
+                }
+                
                 fetch("https://www.reddit.com/subreddits/search.json?q=" + this.subreddit)
                     .then(res => res.json())
                     .then(json => {
@@ -230,7 +234,7 @@
         background-color: #e45e35;
         border-radius: 100;
         margin: 5 0;
-        height: 40;
+        height: 38;
     }
 
     .maincolor {
