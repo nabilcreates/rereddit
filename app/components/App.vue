@@ -205,7 +205,7 @@
 </script>
 
 <style scoped>
-    /* PRIMARY COLOR IS #7a53ba */
+    /* PRIMARY COLOR IS #e45e35 */
 
     Page {
         background-color: #1c181f;
@@ -217,7 +217,7 @@
     }
 
     ActionBar {
-        background-color: #7a53ba;
+        background-color: #e45e35;
         color: #ffffff;
     }
 
@@ -226,14 +226,14 @@
     }
 
     Button {
-        background-color: #7a53ba;
+        background-color: #e45e35;
         border-radius: 100;
         margin: 5 0;
         height: 40;
     }
 
     .maincolor {
-        color: #7a53ba;
+        color: #e45e35;
         font-weight: 700;
     }
 </style>
