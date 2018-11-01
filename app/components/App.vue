@@ -116,22 +116,22 @@
                 this.loadedsearch = false;
                 this.app.status = "Searching for Subreddit"
 
-                if(this.subreddit == "rdrs"){
+                if (this.subreddit == "rdrs") {
                     this.randomSubreddit()
+                } else {
+                    fetch("https://www.reddit.com/subreddits/search.json?q=" + this.subreddit)
+                        .then(res => res.json())
+                        .then(json => {
+
+                            // json.data.children[i].data.display_name_prefixed
+                            console.log(json)
+                            this.searchdata = json
+
+                            this.app.status = "Searched Subreddit"
+                            this.loadedsearch = true;
+                            this.loaded = false;
+                        })
                 }
-                
-                fetch("https://www.reddit.com/subreddits/search.json?q=" + this.subreddit)
-                    .then(res => res.json())
-                    .then(json => {
-
-                        // json.data.children[i].data.display_name_prefixed
-                        console.log(json)
-                        this.searchdata = json
-
-                        this.app.status = "Searched Subreddit"
-                        this.loadedsearch = true;
-                        this.loaded = false;
-                    })
 
 
             },
@@ -160,7 +160,8 @@
 
                         } else {
 
-                            this.app.status = "Subreddit is valid. Fetching API... (If taking too long, the subreddit MAY not exist!)"
+                            this.app.status =
+                                "Subreddit is valid. Fetching API... (If taking too long, the subreddit MAY not exist!)"
 
                             // IF IT EXISTS
                             fetch("https://www.reddit.com/r/" + subreddit + "/new.json?limit=100")
@@ -241,5 +242,4 @@
         color: #e45e35;
         font-weight: 700;
     }
-
 </style>
