@@ -1,15 +1,13 @@
 <template>
     <Page>
-        <ActionBar :title="app.title" />
+        <ActionBar :title="app.title + ' ' + app.version" />
         <StackLayout>
 
             <!-- MAIN CONCEPT OF THE API FETCHING IS THAT THE SUBREDDIT WILL BE VERIFIED BY VERIFYSUBREDDIT AND IF IT PASS, IT WILL RUN THROUGH FETCHAPI WHICH WILL GET THE POSTS -->
+            <!-- ALSO, TO ADD ITS MODE IS FROM ? TO SEARCH TO VERIFICATION TO SUBREDDIT OR VERIFICATION TO SUREDDIT DEPENDING -->
 
-            <!-- UI CHANGES, ADDED APP TITLE AND ALSO THE DESCRIPTION -->
-            <!-- <Label textWrap="true" style=" font-size: 30; font-weight: 700;">{{app.title}}</Label>
-            <Label textWrap="true"> {{app.description}} </Label> -->
-            <Label textWrap="true">Status: {{app.status}} </Label>
-            <Label textWrap="true" style="margin-bottom: 10;">Mode: {{app.mode}} </Label>
+            <!--  -->
+            <Label textWrap="true" style="margin-bottom: 10;">Status: {{app.status}} | Mode: {{app.mode}} </Label>
 
             <!--SUBREDDIT INPUTFIELD -->
             <StackLayout class="input-field">
@@ -21,7 +19,7 @@
             <Button @tap="refresh()"> View / Update Subreddit </Button>
 
             <!-- SEARCH BUTTON -->
-            <Button @tap="searchSubreddit()">Seach For Subreddit </Button>
+            <Button @tap="searchSubreddit()">Search For Subreddit </Button>
 
 
             <!-- LISTVIEW / LOOP FOR SEARCH-->
@@ -62,7 +60,8 @@
             return {
 
                 app: {
-                    title: "Rereddit 📚",
+                    title: "Rereddit",
+                    version: "1.3.0u",
                     description: "A Reddit Client for Android (BETA)",
                     status: "App Launched",
                     mode: "?",
@@ -146,15 +145,17 @@
 
                         console.log(json)
 
-                        // CHECK IF THE SUBREDDIT EXISTS
-                        if (json.data.children.length == 0) {
+                        this.app.status = "Subreddit doesn't exist"
+
+                        // CHECK IF THE SUBREDDIT EXISTS (By using the length of subreddit data gotten by api)
+                        if (json.data.children.length == 0 || json.data.children.length == 1) {
 
                             // IF IT DOESNT EXIST, APP.STATUS WILL PRINT OUT BELOW
                             this.app.status = "Subreddit doesn't exist"
 
                         } else {
 
-                            this.app.status = "Subreddit is valid. Fetching API..."
+                            this.app.status = "Subreddit is valid. Fetching API... (If taking too long, the subreddit MAY not exist!)"
 
                             // IF IT EXISTS
                             fetch("https://www.reddit.com/r/" + subreddit + "/new.json?limit=100")
@@ -177,15 +178,26 @@
                     })
             },
 
+            randomSubreddit() {
+
+                this.app.status = "Fetching Random Subreddit"
+                this.app.mode = "random"
+
+                // THIS.SUBREDDIT EQUALS TO A RANDOM SUBREDDIT
+                var randsub = ["sbubby", "memes", "wallpaper", "iwallpaper", "apphookup", "fallout", "trees",
+                    "natureislit",
+                    "PhotoshopBattles", "perfecttiming", "woooosh"
+                ]
+                this.subreddit = randsub[(Math.floor(Math.random() * randsub.length))].toLowerCase()
+
+            }
+
         },
 
         mounted() {
 
-            // THIS.SUBREDDIT EQUALS TO A RANDOM SUB UPON LAUNCH
-            var randsub = ["sbubby", "memes", "wallpaper", "iwallpaper", "apphookup", "fallout", "trees", "natureislit",
-                "PhotoshopBattles", "perfecttiming", "woooosh"
-            ]
-            this.subreddit = randsub[(Math.floor(Math.random() * randsub.length))].toLowerCase()
+            this.randomSubreddit()
+
         }
 
 
@@ -193,10 +205,10 @@
 </script>
 
 <style scoped>
-    /* PRIMARY COLOR IS #53b3ba */
+    /* PRIMARY COLOR IS #7a53ba */
 
     Page {
-        background-color: #161616;
+        background-color: #1c181f;
         color: #ffffff;
     }
 
@@ -205,7 +217,7 @@
     }
 
     ActionBar {
-        background-color: #53b3ba;
+        background-color: #7a53ba;
         color: #ffffff;
     }
 
@@ -214,13 +226,14 @@
     }
 
     Button {
-        background-color: #53b3ba;
+        background-color: #7a53ba;
         border-radius: 100;
         margin: 5 0;
+        height: 40;
     }
 
     .maincolor {
-        color: #53b3ba;
+        color: #7a53ba;
         font-weight: 700;
     }
 </style>
