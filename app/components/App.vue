@@ -8,10 +8,14 @@
             <!-- UI CHANGES, ADDED APP TITLE AND ALSO THE DESCRIPTION -->
             <!-- <Label textWrap="true" style=" font-size: 30; font-weight: 700;">{{app.title}}</Label>
             <Label textWrap="true"> {{app.description}} </Label> -->
-            <Label textWrap="true" style="margin-bottom: 10;"> App Current Status: {{app.status}} </Label>
+            <Label textWrap="true">Status: {{app.status}} </Label>
+            <Label textWrap="true" style="margin-bottom: 10;">Mode: {{app.mode}} </Label>
 
-            <!-- CHANGE SUBREDDIT INPUTFIELD -->
-            <TextField v-model="subreddit" />
+            <!--SUBREDDIT INPUTFIELD -->
+            <StackLayout class="input-field">
+                <Label textWrap='true' text="Enter a subreddit:" />
+                <TextField v-model="subreddit" />
+            </StackLayout>
 
             <!-- REFRESH BUTTON -->
             <Button @tap="refresh()"> Refresh / Update </Button>
@@ -21,22 +25,23 @@
 
             <!-- LISTVIEW / LOOP FOR SEARCH-->
             <!-- MAIN CONCEPT IS THAT IT WILL SEARCH AND THEN THE LISTVIEW WILL SHOW IF IT MEETS BOTH REQUIREMENT THAT IS LOADEDSEARC AND APP.MODE IS SEARCH. -->
-            <ListView class="list-group" for="result in searchdata.data.children" @itemTap="onSearchTap"
-                v-if="loadedsearch && app.mode == 'search'" separatorColor="gray">
+            <ListView class="list-group" for="result in searchdata.data.children" @itemTap="onSearchTap" v-if="loadedsearch && app.mode == 'search'"
+                separatorColor="gray">
                 <v-template>
                     <StackLayout flexDirection="row" class="list-group-item">
-                        <Label textWrap='true' :text="result.data.display_name_prefixed" class="list-group-item-heading" />
-                        <Label textWrap='true' :text="result.data.public_description" class="list-group-item-heading" />
+                        <Label textWrap='true' :text="result.data.display_name_prefixed" class="list-group-item-heading maincolor" />
+                        <Label textWrap='true' v-if="result.data.public_description" :text="result.data.public_description" class="list-group-item-heading" />
+                        <Label textWrap='true' v-else text="No Description Provided" class="list-group-item-heading" />
                     </StackLayout>
                 </v-template>
             </ListView>
 
             <!-- LISTVIEW / LOOP FOR SUBREDDITS-->
-            <ListView class="list-group" for="post in redditdata.data.children" @itemTap="onPostTap"
-                v-if="loaded && app.mode == 'subreddit'" separatorColor="gray">
+            <ListView class="list-group" for="post in redditdata.data.children" @itemTap="onPostTap" v-if="loaded && app.mode == 'subreddit'"
+                separatorColor="gray">
                 <v-template>
                     <StackLayout flexDirection="row" class="list-group-item">
-                        <Img :src="post.data.thumbnail" style="width: 200px;" />
+                        <Img :src="post.data.thumbnail" style="width: 250px;" />
                         <Label textWrap='true' :text="post.data.title" class="list-group-item-heading" />
                     </StackLayout>
                 </v-template>
@@ -57,7 +62,7 @@
                 app: {
                     title: "Rereddit",
                     description: "A Reddit Client for Android (BETA)",
-                    status: "launched",
+                    status: "App Launched",
                     mode: "?",
                 },
 
@@ -128,6 +133,7 @@
             verifySubreddit(subreddit) {
 
                 this.app.status = "Verifying Subreddit"
+                this.app.mode = "verification"
 
                 fetch("https://www.reddit.com/subreddits/search.json?q=" + subreddit)
                     .then(res => res.json())
@@ -171,6 +177,14 @@
 
         },
 
+        mounted(){
+
+            // THIS.SUBREDDIT EQUALS TO A RANDOM SUB
+            var randsub = ["sbubby","memes","wallpaper","iwallpaper","apphookup","fallout","trees","natureislit","blackpeoplegifs","shittyreactiongifs","PhotoshopBattles","perfecttiming"]
+            this.subreddit = randsub[(Math.floor(Math.random() * randsub.length))].toLowerCase()
+        }
+        
+
     }
 </script>
 
@@ -183,7 +197,7 @@
     }
 
     StackLayout {
-        margin: 30;
+        margin: 10;
     }
 
     ActionBar {
@@ -198,10 +212,11 @@
     Button {
         background-color: #53b3ba;
         border-radius: 100;
-        margin: 10 0;
+        margin: 5 0;
     }
 
-    Img {
-        border-radius: 100;
+    .maincolor {
+        color: #53b3ba;
+        font-weight: 700;
     }
 </style>
