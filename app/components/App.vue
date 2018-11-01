@@ -18,10 +18,11 @@
             </StackLayout>
 
             <!-- REFRESH BUTTON -->
-            <Button @tap="refresh()"> Refresh / Update </Button>
+            <Button @tap="refresh()"> View / Update Subreddit </Button>
 
             <!-- SEARCH BUTTON -->
             <Button @tap="searchSubreddit()">Seach For Subreddit </Button>
+
 
             <!-- LISTVIEW / LOOP FOR SEARCH-->
             <!-- MAIN CONCEPT IS THAT IT WILL SEARCH AND THEN THE LISTVIEW WILL SHOW IF IT MEETS BOTH REQUIREMENT THAT IS LOADEDSEARC AND APP.MODE IS SEARCH. -->
@@ -30,7 +31,8 @@
                 <v-template>
                     <StackLayout flexDirection="row" class="list-group-item">
                         <Label textWrap='true' :text="result.data.display_name_prefixed" class="list-group-item-heading maincolor" />
-                        <Label textWrap='true' v-if="result.data.public_description" :text="result.data.public_description" class="list-group-item-heading" />
+                        <Label textWrap='true' v-if="result.data.public_description" :text="result.data.public_description"
+                            class="list-group-item-heading" />
                         <Label textWrap='true' v-else text="No Description Provided" class="list-group-item-heading" />
                     </StackLayout>
                 </v-template>
@@ -60,13 +62,13 @@
             return {
 
                 app: {
-                    title: "Rereddit",
+                    title: "Rereddit 📚",
                     description: "A Reddit Client for Android (BETA)",
                     status: "App Launched",
                     mode: "?",
                 },
 
-                subreddit: "wallpapers",
+                subreddit: "",
 
                 redditdata: [],
                 searchdata: [],
@@ -177,13 +179,15 @@
 
         },
 
-        mounted(){
+        mounted() {
 
-            // THIS.SUBREDDIT EQUALS TO A RANDOM SUB
-            var randsub = ["sbubby","memes","wallpaper","iwallpaper","apphookup","fallout","trees","natureislit","blackpeoplegifs","shittyreactiongifs","PhotoshopBattles","perfecttiming"]
+            // THIS.SUBREDDIT EQUALS TO A RANDOM SUB UPON LAUNCH
+            var randsub = ["sbubby", "memes", "wallpaper", "iwallpaper", "apphookup", "fallout", "trees", "natureislit",
+                "PhotoshopBattles", "perfecttiming", "woooosh"
+            ]
             this.subreddit = randsub[(Math.floor(Math.random() * randsub.length))].toLowerCase()
         }
-        
+
 
     }
 </script>
